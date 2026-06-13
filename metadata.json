@@ -1,0 +1,6 @@
+{
+  "name": "Raffi Arya Portfolio",
+  "description": "Minimalist interactive 3D and modding portfolio for Raffi Arya Putra Prabowo",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

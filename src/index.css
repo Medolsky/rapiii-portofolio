@@ -1,0 +1,58 @@
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;450;600;700&family=JetBrains+Mono:wght@300;450;600&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Space Grotesk", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
+
+  /* Ocean Blue Dark palette */
+  --color-ocean-950: #060d1a;
+  --color-ocean-900: #0a1628;
+  --color-ocean-850: #0d1f38;
+  --color-ocean-800: #112444;
+  --color-ocean-700: #163060;
+  --color-ocean-600: #1e4080;
+  --color-ocean-500: #2563a8;
+  --color-ocean-400: #3b82c4;
+  --color-ocean-300: #60a5d8;
+  --color-ocean-200: #93c5e8;
+  --color-ocean-100: #cce4f4;
+  --color-ocean-50:  #e8f4fb;
+}
+
+/* Custom Minimalist Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #0a1628;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(37, 99, 168, 0.35);
+  border-radius: 9999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(59, 130, 196, 0.55);
+}
+
+/* Input focus glow in ocean-blue */
+input:focus, select:focus, textarea:focus {
+  box-shadow: 0 0 12px rgba(37, 99, 168, 0.25);
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+/* Active-project pulsing badge */
+@keyframes badge-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.55; }
+}
+.badge-pulse {
+  animation: badge-pulse 2s ease-in-out infinite;
+}
