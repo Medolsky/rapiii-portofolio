@@ -341,32 +341,32 @@ export default function InteractiveCanvas3D({
   const [showGrid, setShowGrid] = useState(true);
   const [hasGtaModel, setHasGtaModel] = useState(false);
   const [showCustomModel, setShowCustomModel] = useState(false);
-  const [modelPath, setModelPath] = useState("/assets/models/gta_model.glb");
-
+  const [modelPath, setModelPath] = useState("assets/models/gta_model.glb");
+ 
   const themeColor = modelType === "car" 
     ? "#38bdf8" 
     : modelType === "sword"
     ? "#6366f1" 
     : "#a855f7";
-
+ 
   useEffect(() => {
     // Check if gt86.glb exists
-    fetch("/assets/models/gt86.glb", { method: "HEAD" })
+    fetch("assets/models/gt86.glb", { method: "HEAD" })
       .then((res) => {
         const contentType = res.headers.get("content-type");
         if (res.ok && contentType && !contentType.includes("text/html")) {
           setHasGtaModel(true);
           setShowCustomModel(true);
-          setModelPath("/assets/models/gt86.glb");
+          setModelPath("assets/models/gt86.glb");
         } else {
           // Check if gta_model.glb exists
-          fetch("/assets/models/gta_model.glb", { method: "HEAD" })
+          fetch("assets/models/gta_model.glb", { method: "HEAD" })
             .then((res2) => {
               const contentType2 = res2.headers.get("content-type");
               if (res2.ok && contentType2 && !contentType2.includes("text/html")) {
                 setHasGtaModel(true);
                 setShowCustomModel(true);
-                setModelPath("/assets/models/gta_model.glb");
+                setModelPath("assets/models/gta_model.glb");
               } else {
                 setHasGtaModel(false);
                 setShowCustomModel(false);
@@ -380,13 +380,13 @@ export default function InteractiveCanvas3D({
       })
       .catch(() => {
         // Try gta_model.glb as fallback
-        fetch("/assets/models/gta_model.glb", { method: "HEAD" })
+        fetch("assets/models/gta_model.glb", { method: "HEAD" })
           .then((res2) => {
             const contentType2 = res2.headers.get("content-type");
             if (res2.ok && contentType2 && !contentType2.includes("text/html")) {
               setHasGtaModel(true);
               setShowCustomModel(true);
-              setModelPath("/assets/models/gta_model.glb");
+              setModelPath("assets/models/gta_model.glb");
             } else {
               setHasGtaModel(false);
               setShowCustomModel(false);

@@ -23,7 +23,7 @@ export default function ActiveProjectsProgress() {
       percentage: 92,
       description: "Optimasi streaming pack, LOD reduction, & texture re-encoding untuk server FiveM.",
       tech: ["FiveM Stream Pack", "Texture DDS Compress", "YDR/YDD Optimizer"],
-      icon: <img src="/assets/images/ophelia_logo.png" className="w-6 h-6 object-contain rounded-md" alt="Ophelia Logo" />,
+      icon: <img src="assets/images/ophelia_logo.png" className="w-6 h-6 object-contain rounded-md" alt="Ophelia Logo" />,
       colorClass: "from-cyan-500 to-ocean-400",
       glowClass: "shadow-cyan-500/20"
     },
@@ -34,7 +34,7 @@ export default function ActiveProjectsProgress() {
       percentage: 85,
       description: "Pembuatan clothing kustom, livery, & integrasi MLO eksklusif.",
       tech: ["Blender 3D", "CodeWalker", "ZModeler3"],
-      icon: <img src="/assets/images/ophelia_logo.png" className="w-6 h-6 object-contain rounded-md" alt="Ophelia Logo" />,
+      icon: <img src="assets/images/ophelia_logo.png" className="w-6 h-6 object-contain rounded-md" alt="Ophelia Logo" />,
       colorClass: "from-indigo-500 to-ocean-400",
       glowClass: "shadow-indigo-500/20"
     },
@@ -45,7 +45,7 @@ export default function ActiveProjectsProgress() {
       percentage: 95,
       description: "Pengembangan front-end & back-end portal utama Abbata Group.",
       tech: ["Next.js", "React", "PostgreSQL"],
-      icon: <img src="/assets/images/abbata_logo.png" className="w-6 h-6 object-contain rounded-md" alt="Abbata Logo" />,
+      icon: <img src="assets/images/abbata_logo.png" className="w-6 h-6 object-contain rounded-md" alt="Abbata Logo" />,
       colorClass: "from-emerald-500 to-ocean-400",
       glowClass: "shadow-emerald-500/20"
     },
@@ -56,7 +56,7 @@ export default function ActiveProjectsProgress() {
       percentage: 70,
       description: "Pembuatan landing page wisata interaktif & booking system real-time shuttle.",
       tech: ["React", "Tailwind CSS", "WhatsApp API"],
-      icon: <img src="/assets/images/abbata_logo.png" className="w-6 h-6 object-contain rounded-md" alt="Abbata Logo" />,
+      icon: <img src="assets/images/abbata_logo.png" className="w-6 h-6 object-contain rounded-md" alt="Abbata Logo" />,
       colorClass: "from-amber-500 to-ocean-400",
       glowClass: "shadow-amber-500/20"
     }
