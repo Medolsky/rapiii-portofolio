@@ -1,0 +1,4 @@
+Place your exported GTA V .glb model here and name it:
+gta_model.glb
+
+Once named 'gta_model.glb' and placed in this directory, the website's WebGL engine will automatically detect it and render it in the 3D viewport!
