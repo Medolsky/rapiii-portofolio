@@ -37,10 +37,10 @@ export default function FeaturedProjects({ onLoadModel }: FeaturedProjectsProps)
       <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6">
         <div>
           <div className="flex items-center gap-2 mb-2">
-            <span className="h-1.5 w-10 bg-ocean-400 rounded-full" />
-            <span className="font-mono text-xs text-ocean-300 uppercase tracking-widest font-bold">Karya & Proyek</span>
+            <span className="h-1.5 w-10 bg-gradient-to-r from-cyan-400 to-ocean-500 rounded-full" />
+            <span className="font-mono text-xs text-cyan-300 uppercase tracking-widest font-bold">Karya & Proyek</span>
           </div>
-          <h2 className="text-3xl font-bold tracking-tight text-white sm:text-4xl">
+          <h2 className="text-3xl font-bold tracking-tight text-slate-50 sm:text-4xl font-heading uppercase">
             PROYEK & PEKERJAAN
           </h2>
           <p className="mt-3 text-slate-350 max-w-xl text-sm leading-relaxed font-medium">
@@ -49,7 +49,7 @@ export default function FeaturedProjects({ onLoadModel }: FeaturedProjectsProps)
         </div>
 
         {/* Filter Tab Layout */}
-        <div className="flex flex-wrap gap-1.5 bg-ocean-900/60 border border-ocean-800/80 p-1.5 rounded-[20px] self-start backdrop-blur-2xl">
+        <div className="flex flex-wrap gap-1.5 bg-ocean-900/70 border border-ocean-800/80 p-1.5 rounded-[20px] self-start backdrop-blur-2xl">
           {categories.map((cat) => (
             <button
               key={cat}
@@ -57,8 +57,8 @@ export default function FeaturedProjects({ onLoadModel }: FeaturedProjectsProps)
               onClick={() => setSelectedCategory(cat)}
               className={`px-4 py-2 rounded-[14px] text-xs font-semibold tracking-wide transition-all duration-300 flex items-center gap-1.5 cursor-pointer ${
                 selectedCategory === cat
-                  ? "bg-gradient-to-r from-ocean-600 to-ocean-400 text-white shadow-lg shadow-ocean-500/15"
-                  : "text-slate-400 hover:text-white hover:bg-white/5"
+                  ? "bg-gradient-to-r from-cyan-500 to-ocean-500 text-slate-50 shadow-lg shadow-cyan-500/20 font-bold border border-cyan-400/30"
+                  : "text-slate-400 hover:text-slate-50 hover:bg-white/5"
               }`}
             >
               {getCategoryIcon(cat)}
@@ -83,12 +83,12 @@ export default function FeaturedProjects({ onLoadModel }: FeaturedProjectsProps)
               exit={{ opacity: 0, scale: 0.95 }}
               transition={{ duration: 0.4, delay: idx * 0.05 }}
               whileHover={{ y: -6 }}
-              className="bg-ocean-900/40 hover:bg-ocean-800/30 border border-ocean-800/50 hover:border-ocean-700/60 rounded-[32px] overflow-hidden cursor-pointer flex flex-col group transition-all duration-300 shadow-md shadow-black/10 relative"
+              className="bg-ocean-900/50 hover:bg-ocean-900/80 border border-ocean-800/80 hover:border-cyan-500/40 rounded-[32px] overflow-hidden cursor-pointer flex flex-col group transition-all duration-300 shadow-xl shadow-black/20 hover:shadow-cyan-500/10 relative"
               onClick={() => setActiveProject(project)}
             >
               {/* Card Image Cover */}
               <div className="relative h-48 overflow-hidden bg-ocean-950">
-                <div className="absolute inset-0 bg-gradient-to-t from-ocean-950 via-ocean-950/20 to-transparent z-10" />
+                <div className="absolute inset-0 bg-gradient-to-t from-ocean-950 via-ocean-950/30 to-transparent z-10" />
                 <img
                   src={project.image}
                   alt={project.title}
@@ -98,16 +98,16 @@ export default function FeaturedProjects({ onLoadModel }: FeaturedProjectsProps)
                 
                 {/* Status indicator: Running / Active */}
                 {project.status === "active" && (
-                  <div className="absolute top-4 right-4 z-20 flex items-center gap-1 bg-emerald-500/90 backdrop-blur text-white text-[9px] font-bold py-1 px-2.5 rounded-xl border border-emerald-400/30 badge-pulse">
+                  <div className="absolute top-4 right-4 z-20 flex items-center gap-1.5 bg-emerald-500/90 backdrop-blur-md text-slate-50 text-[9px] font-bold py-1 px-2.5 rounded-xl border border-emerald-400/40 shadow-md">
                     <span className="w-1.5 h-1.5 bg-white rounded-full animate-ping" />
                     <span>SEDANG BERJALAN</span>
                   </div>
                 )}
 
                 {/* Micro tech pill info */}
-                <div className="absolute top-4 left-4 z-20 flex items-center gap-1.5 bg-ocean-950/80 backdrop-blur border border-ocean-800/60 py-1 px-2.5 rounded-xl">
+                <div className="absolute top-4 left-4 z-20 flex items-center gap-1.5 bg-ocean-950/85 backdrop-blur-md border border-cyan-500/30 py-1 px-2.5 rounded-xl shadow-md">
                   {getCategoryIcon(project.category)}
-                  <span className="font-mono text-[10px] text-slate-350 font-medium uppercase tracking-wider">
+                  <span className="font-mono text-[10px] text-cyan-300 font-semibold uppercase tracking-wider">
                     {project.category}
                   </span>
                 </div>
@@ -116,7 +116,7 @@ export default function FeaturedProjects({ onLoadModel }: FeaturedProjectsProps)
               {/* Card Info Area */}
               <div className="p-6 flex-1 flex flex-col justify-between">
                 <div>
-                  <h3 className="text-lg font-bold text-slate-100 group-hover:text-ocean-300 transition-colors duration-300">
+                  <h3 className="text-lg font-bold text-slate-100 group-hover:text-cyan-300 transition-colors duration-300 leading-snug">
                     {project.title}
                   </h3>
                   <p className="mt-2 text-xs text-slate-350 leading-relaxed line-clamp-3 font-medium">
@@ -124,17 +124,17 @@ export default function FeaturedProjects({ onLoadModel }: FeaturedProjectsProps)
                   </p>
                 </div>
 
-                <div className="mt-6 pt-4 border-t border-ocean-800/50 flex flex-wrap gap-1.5">
+                <div className="mt-6 pt-4 border-t border-ocean-800/60 flex flex-wrap gap-1.5">
                   {project.technologies.slice(0, 3).map(tech => (
                     <span 
                       key={tech} 
-                      className="bg-ocean-950/50 text-slate-350 font-mono text-[9px] px-2.5 py-0.5 rounded-lg border border-ocean-800/40"
+                      className="bg-ocean-950/70 text-slate-300 font-mono text-[9px] px-2.5 py-0.5 rounded-lg border border-ocean-800/60"
                     >
                       {tech}
                     </span>
                   ))}
                   {project.technologies.length > 3 && (
-                    <span className="text-[10px] text-slate-400 font-mono py-0.5 px-1 font-bold">
+                    <span className="text-[10px] text-cyan-400 font-mono py-0.5 px-1 font-bold">
                       +{project.technologies.length - 3}
                     </span>
                   )}
@@ -171,7 +171,7 @@ export default function FeaturedProjects({ onLoadModel }: FeaturedProjectsProps)
               <button
                 id="modal-close-btn"
                 onClick={() => setActiveProject(null)}
-                className="absolute top-5 right-5 z-20 bg-ocean-950/50 hover:bg-ocean-600 border border-ocean-800/60 text-slate-350 hover:text-white p-2.5 rounded-full transition-colors cursor-pointer"
+                className="absolute top-5 right-5 z-20 bg-ocean-950/50 hover:bg-ocean-600 border border-ocean-800/60 text-slate-350 hover:text-slate-50 p-2.5 rounded-full transition-colors cursor-pointer"
                 aria-label="Close dialog"
               >
                 <X className="w-4 h-4" />
@@ -188,10 +188,10 @@ export default function FeaturedProjects({ onLoadModel }: FeaturedProjectsProps)
                 />
                 
                 <div className="absolute bottom-6 left-6 md:left-10 z-20">
-                  <span className="bg-gradient-to-r from-ocean-600 to-ocean-400 text-white font-mono text-[9px] py-1 px-3.5 rounded-full uppercase tracking-wider font-semibold">
+                  <span className="bg-gradient-to-r from-ocean-600 to-ocean-400 text-slate-50 font-mono text-[9px] py-1 px-3.5 rounded-full uppercase tracking-wider font-semibold">
                     {activeProject.category}
                   </span>
-                  <h1 className="text-2xl md:text-4xl font-extrabold text-white mt-3 tracking-tight">
+                  <h1 className="text-2xl md:text-4xl font-extrabold text-slate-50 mt-3 tracking-tight">
                     {activeProject.title}
                   </h1>
                 </div>
@@ -257,7 +257,7 @@ export default function FeaturedProjects({ onLoadModel }: FeaturedProjectsProps)
                           viewportElem.scrollIntoView({ behavior: "smooth", block: "center" });
                         }
                       }}
-                      className="w-full bg-gradient-to-r from-ocean-600 to-ocean-400 hover:brightness-110 text-white text-xs font-bold py-3 px-4 rounded-xl transition-all duration-300 flex items-center justify-center gap-2 group cursor-pointer shadow-lg shadow-ocean-500/25"
+                      className="w-full bg-gradient-to-r from-ocean-600 to-ocean-400 hover:brightness-110 text-slate-50 text-xs font-bold py-3 px-4 rounded-xl transition-all duration-300 flex items-center justify-center gap-2 group cursor-pointer shadow-lg shadow-ocean-500/25"
                     >
                       <Box className="w-4 h-4 animate-bounce" />
                       <span>MUAT MODEL 3D PROYEK</span>
@@ -272,7 +272,7 @@ export default function FeaturedProjects({ onLoadModel }: FeaturedProjectsProps)
                 <button
                   id="modal-back-btn"
                   onClick={() => setActiveProject(null)}
-                  className="text-xs text-slate-400 hover:text-white flex items-center gap-1.5 cursor-pointer"
+                  className="text-xs text-slate-400 hover:text-slate-50 flex items-center gap-1.5 cursor-pointer"
                 >
                   <ArrowLeft className="w-3.5 h-3.5" />
                   Kembali ke portofolio

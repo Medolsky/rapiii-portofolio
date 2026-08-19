@@ -336,88 +336,72 @@ export default function InteractiveCanvas3D({
   };
 
   const [renderMode, setRenderMode] = useState<"wireframe" | "vertices" | "solid" | "xray">("solid");
+  const [themeColor, setThemeColor] = useState("#ffffff");
   const [isRotating, setIsRotating] = useState(true);
   const [rotationSpeed, setRotationSpeed] = useState(1.0);
   const [showGrid, setShowGrid] = useState(true);
   const [hasGtaModel, setHasGtaModel] = useState(false);
   const [showCustomModel, setShowCustomModel] = useState(false);
-  const [modelPath, setModelPath] = useState("assets/models/gta_model.glb");
- 
-  const themeColor = modelType === "car" 
-    ? "#38bdf8" 
-    : modelType === "sword"
-    ? "#6366f1" 
-    : "#a855f7";
+  const initialGt86Path = `${import.meta.env.BASE_URL}assets/models/gt86.glb`;
+  const [modelPath, setModelPath] = useState(initialGt86Path);
  
   useEffect(() => {
-    // Check if gt86.glb exists
-    fetch("assets/models/gt86.glb", { method: "HEAD" })
-      .then((res) => {
-        const contentType = res.headers.get("content-type");
-        if (res.ok && contentType && !contentType.includes("text/html")) {
-          setHasGtaModel(true);
-          setShowCustomModel(true);
-          setModelPath("assets/models/gt86.glb");
-        } else {
-          // Check if gta_model.glb exists
-          fetch("assets/models/gta_model.glb", { method: "HEAD" })
-            .then((res2) => {
-              const contentType2 = res2.headers.get("content-type");
-              if (res2.ok && contentType2 && !contentType2.includes("text/html")) {
-                setHasGtaModel(true);
-                setShowCustomModel(true);
-                setModelPath("assets/models/gta_model.glb");
-              } else {
-                setHasGtaModel(false);
-                setShowCustomModel(false);
-              }
-            })
-            .catch(() => {
-              setHasGtaModel(false);
-              setShowCustomModel(false);
-            });
+    const candidatePaths = [
+      `${import.meta.env.BASE_URL}assets/models/gt86.glb`,
+      "assets/models/gt86.glb",
+      `${import.meta.env.BASE_URL}assets/models/custom_car.glb`,
+      "assets/models/custom_car.glb",
+      `${import.meta.env.BASE_URL}assets/models/gta_model.glb`,
+      "assets/models/gta_model.glb"
+    ];
+
+    let found = false;
+    const checkPath = async () => {
+      for (const path of candidatePaths) {
+        try {
+          const res = await fetch(path, { method: "HEAD" });
+          const contentType = res.headers.get("content-type");
+          if (res.ok && contentType && !contentType.includes("text/html")) {
+            setHasGtaModel(true);
+            setShowCustomModel(true);
+            setModelPath(path);
+            found = true;
+            break;
+          }
+        } catch (e) {
+          // ignore & continue to next candidate
         }
-      })
-      .catch(() => {
-        // Try gta_model.glb as fallback
-        fetch("assets/models/gta_model.glb", { method: "HEAD" })
-          .then((res2) => {
-            const contentType2 = res2.headers.get("content-type");
-            if (res2.ok && contentType2 && !contentType2.includes("text/html")) {
-              setHasGtaModel(true);
-              setShowCustomModel(true);
-              setModelPath("assets/models/gta_model.glb");
-            } else {
-              setHasGtaModel(false);
-              setShowCustomModel(false);
-            }
-          })
-          .catch(() => {
-            setHasGtaModel(false);
-            setShowCustomModel(false);
-          });
-      });
-  }, []);
+      }
+      if (!found) {
+        // Fallback check: if on localhost or relative path, directly set gt86.glb
+        setHasGtaModel(true);
+        setShowCustomModel(true);
+        setModelPath(initialGt86Path);
+      }
+    };
+
+    checkPath();
+  }, [initialGt86Path]);
 
   const getModelName = () => {
     return modelPath.substring(modelPath.lastIndexOf("/") + 1).toUpperCase();
   };
 
   return (
-    <div className="w-full bg-ocean-900/50 border border-ocean-800/80 rounded-[32px] p-6 backdrop-blur-2xl shadow-xl shadow-black/20 relative overflow-hidden flex flex-col md:flex-row gap-6 text-slate-200">
-      <div className="absolute -top-16 -right-16 w-32 h-32 bg-ocean-500/10 rounded-full blur-3xl pointer-events-none" />
-      <div className="absolute -bottom-16 -left-16 w-32 h-32 bg-ocean-400/10 rounded-full blur-3xl pointer-events-none" />
+    <div className="w-full bg-zinc-950/80 border border-zinc-800 rounded-[32px] p-6 backdrop-blur-2xl shadow-xl shadow-black/80 relative overflow-hidden flex flex-col md:flex-row gap-6 text-zinc-200">
+      <div className="absolute -top-16 -right-16 w-32 h-32 bg-white/5 rounded-full blur-3xl pointer-events-none" />
+      <div className="absolute -bottom-16 -left-16 w-32 h-32 bg-white/5 rounded-full blur-3xl pointer-events-none" />
 
       {/* R3F Canvas Viewport */}
-      <div className="flex-1 min-h-[320px] md:min-h-[400px] h-[400px] bg-ocean-950/80 border border-ocean-800/85 rounded-2xl relative select-none overflow-hidden">
+      <div className="flex-1 min-h-[320px] md:min-h-[400px] h-[400px] bg-black border border-zinc-800 rounded-2xl relative select-none overflow-hidden">
         
         {/* OSD Overlay Info */}
-        <div className="absolute top-4 left-4 font-mono text-[10px] tracking-tight text-slate-350 bg-ocean-950/90 backdrop-blur-md py-2.5 px-3.5 rounded-xl border border-ocean-800/60 flex flex-col gap-1 z-10 select-none pointer-events-none">
-          <div className="text-slate-200 font-bold flex items-center gap-1.5">
-            <Box className="w-3.5 h-3.5 text-ocean-300 rotate-12" />
+        <div className="absolute top-4 left-4 font-mono text-[10px] tracking-tight text-zinc-400 bg-zinc-950/90 backdrop-blur-md py-2.5 px-3.5 rounded-xl border border-zinc-800 flex flex-col gap-1 z-10 select-none pointer-events-none">
+          <div className="text-white font-bold flex items-center gap-1.5">
+            <Box className="w-3.5 h-3.5 text-white rotate-12" />
             RAFFI3D VIEWPORT v2.1
           </div>
-          <div className="w-16 h-[1px] bg-ocean-800/60 my-1" />
+          <div className="w-16 h-[1px] bg-zinc-800 my-1" />
           <div>MODEL: {hasGtaModel && showCustomModel ? getModelName() : modelType.toUpperCase()}</div>
           <div>MODE: {renderMode.toUpperCase()}</div>
           <div>API: WEBGL 2.0 (Three.js)</div>
@@ -428,8 +412,8 @@ export default function InteractiveCanvas3D({
           </div>
         </div>
 
-        <div className="absolute bottom-4 right-4 text-[10px] text-slate-400 font-mono bg-ocean-950/60 backdrop-blur px-2.5 py-1.5 rounded-lg flex items-center gap-1.5 select-none pointer-events-none border border-ocean-800/60 z-10 font-bold">
-          <Info className="w-3.5 h-3.5 text-ocean-300" />
+        <div className="absolute bottom-4 right-4 text-[10px] text-zinc-400 font-mono bg-zinc-950/80 backdrop-blur px-2.5 py-1.5 rounded-lg flex items-center gap-1.5 select-none pointer-events-none border border-zinc-800 z-10 font-bold">
+          <Info className="w-3.5 h-3.5 text-white" />
           Drag to Orbit | Scroll to Zoom
         </div>
 
@@ -462,14 +446,14 @@ export default function InteractiveCanvas3D({
       <div className="w-full md:w-64 flex flex-col justify-between gap-5">
         <div>
           <div className="flex items-center gap-2 mb-4">
-            <Sliders className="w-5 h-5 text-ocean-300 animate-pulse" />
-            <h3 className="text-sm font-bold tracking-widest text-slate-100 uppercase">
+            <Sliders className="w-5 h-5 text-white animate-pulse" />
+            <h3 className="text-sm font-bold tracking-widest text-white uppercase">
               3D VIEWPORT CONTROLS
             </h3>
           </div>
 
           <div className="mb-4">
-            <label className="text-[10px] uppercase font-mono tracking-wider text-slate-400 block mb-1.5 font-bold">
+            <label className="text-[10px] uppercase font-mono tracking-wider text-zinc-400 block mb-1.5 font-bold">
               Pilih Aset 3D
             </label>
             <div className="grid grid-cols-2 gap-2">
@@ -479,8 +463,8 @@ export default function InteractiveCanvas3D({
                   onClick={() => setShowCustomModel(true)}
                   className={`col-span-2 py-2.5 px-2 text-center rounded-xl text-xs font-extrabold tracking-wide transition-all duration-300 hover:scale-102 active:scale-98 cursor-pointer ${
                     showCustomModel
-                      ? "bg-gradient-to-r from-ocean-600 via-ocean-500 to-ocean-400 text-white shadow-md shadow-ocean-600/25 border-none"
-                      : "bg-ocean-950/60 text-slate-300 border border-ocean-800/80 hover:bg-ocean-800/40 hover:text-white"
+                      ? "bg-white text-black font-bold border-none"
+                      : "bg-zinc-900 text-zinc-300 border border-zinc-800 hover:bg-zinc-800 hover:text-white"
                   }`}
                 >
                   🚘 {getModelName()} (Kustom)
@@ -494,8 +478,8 @@ export default function InteractiveCanvas3D({
                 }}
                 className={`py-2.5 px-1 text-center rounded-xl text-xs font-extrabold tracking-wide transition-all duration-300 hover:scale-102 active:scale-98 cursor-pointer ${
                   !showCustomModel && modelType === "car"
-                    ? "bg-gradient-to-r from-ocean-600 to-ocean-400 text-white shadow-md shadow-ocean-500/20 border-none"
-                    : "bg-ocean-950/60 text-slate-300 border border-ocean-800/80 hover:bg-ocean-800/40 hover:text-white"
+                    ? "bg-white text-black font-bold border-none"
+                    : "bg-zinc-900 text-zinc-300 border border-zinc-800 hover:bg-zinc-800 hover:text-white"
                 }`}
               >
                 Mobil
@@ -508,8 +492,8 @@ export default function InteractiveCanvas3D({
                 }}
                 className={`py-2.5 px-1 text-center rounded-xl text-xs font-extrabold tracking-wide transition-all duration-300 hover:scale-102 active:scale-98 cursor-pointer ${
                   !showCustomModel && modelType === "sword"
-                    ? "bg-gradient-to-r from-ocean-600 to-ocean-400 text-white shadow-md shadow-ocean-500/20 border-none"
-                    : "bg-ocean-950/60 text-slate-300 border border-ocean-800/80 hover:bg-ocean-800/40 hover:text-white"
+                    ? "bg-white text-black font-bold border-none"
+                    : "bg-zinc-900 text-zinc-300 border border-zinc-800 hover:bg-zinc-800 hover:text-white"
                 }`}
               >
                 Pedang
@@ -522,8 +506,8 @@ export default function InteractiveCanvas3D({
                 }}
                 className={`col-span-2 py-2.5 px-1 text-center rounded-xl text-xs font-extrabold tracking-wide transition-all duration-300 hover:scale-102 active:scale-98 cursor-pointer ${
                   !showCustomModel && modelType === "hub"
-                    ? "bg-gradient-to-r from-ocean-600 to-ocean-400 text-white shadow-md shadow-ocean-500/20 border-none"
-                    : "bg-ocean-950/60 text-slate-300 border border-ocean-800/80 hover:bg-ocean-800/40 hover:text-white"
+                    ? "bg-white text-black font-bold border-none"
+                    : "bg-zinc-900 text-zinc-300 border border-zinc-800 hover:bg-zinc-800 hover:text-white"
                 }`}
               >
                 CMS Hub
@@ -532,7 +516,7 @@ export default function InteractiveCanvas3D({
           </div>
 
           <div className="mb-4">
-            <label className="text-[10px] uppercase font-mono tracking-wider text-slate-400 block mb-1.5 font-bold">
+            <label className="text-[10px] uppercase font-mono tracking-wider text-zinc-400 block mb-1.5 font-bold">
               Viewport Shader
             </label>
             <div className="grid grid-cols-2 gap-2">
@@ -540,7 +524,7 @@ export default function InteractiveCanvas3D({
                 { name: "Shaded Mode", val: "solid" },
                 { name: "Wireframe", val: "wireframe" },
                 { name: "Cloud Vertices", val: "vertices" },
-                { name: "X-Ray Cyan", val: "xray" }
+                { name: "X-Ray", val: "xray" }
               ].map(opt => (
                 <button
                   key={opt.val}
@@ -548,12 +532,12 @@ export default function InteractiveCanvas3D({
                   onClick={() => setRenderMode(opt.val as any)}
                   className={`py-2 px-3 text-left rounded-xl text-[10px] uppercase font-extrabold tracking-wide transition-all duration-300 flex items-center justify-between cursor-pointer hover:scale-102 active:scale-98 ${
                     renderMode === opt.val
-                      ? "bg-ocean-500/20 text-ocean-300 border border-ocean-500/40 shadow-sm"
-                      : "bg-ocean-950/60 text-slate-300 border border-ocean-800/80 hover:bg-ocean-800/40 hover:text-white"
+                      ? "bg-white text-black font-bold border border-white"
+                      : "bg-zinc-900 text-zinc-300 border border-zinc-800 hover:bg-zinc-800 hover:text-white"
                   }`}
                 >
                   <span>{opt.name}</span>
-                  <div className={`w-1.5 h-1.5 rounded-full ${renderMode === opt.val ? "bg-emerald-500 shadow-sm shadow-emerald-400 animate-pulse" : "bg-transparent border border-slate-500"}`} />
+                  <div className={`w-1.5 h-1.5 rounded-full ${renderMode === opt.val ? "bg-black animate-pulse" : "bg-transparent border border-zinc-500"}`} />
                 </button>
               ))}
             </div>
@@ -561,7 +545,7 @@ export default function InteractiveCanvas3D({
 
           <div className="mb-4">
             <div className="flex items-center justify-between mb-1">
-              <label className="text-[10px] uppercase font-mono tracking-wider text-slate-400 font-bold">
+              <label className="text-[10px] uppercase font-mono tracking-wider text-zinc-400 font-bold">
                 Orbit Auto-Rotation
               </label>
               <button
@@ -569,8 +553,8 @@ export default function InteractiveCanvas3D({
                 onClick={() => setIsRotating(!isRotating)}
                 className={`text-[10px] px-2.5 py-1 rounded-lg font-mono transition-all font-bold cursor-pointer ${
                   isRotating
-                    ? "text-emerald-400 bg-emerald-500/10 border border-emerald-500/30 animate-pulse"
-                    : "text-slate-400 bg-ocean-950/60 border border-ocean-800/80 hover:bg-ocean-800/40 hover:text-white"
+                    ? "text-white bg-zinc-800 border border-zinc-700"
+                    : "text-zinc-400 bg-zinc-900 border border-zinc-800 hover:bg-zinc-800 hover:text-white"
                 }`}
               >
                 {isRotating ? "ON" : "OFF"}
@@ -578,7 +562,7 @@ export default function InteractiveCanvas3D({
             </div>
             {isRotating && (
               <div className="space-y-1 mt-1.5">
-                <div className="flex items-center justify-between text-[10px] text-slate-400 font-mono font-bold">
+                <div className="flex items-center justify-between text-[10px] text-zinc-400 font-mono font-bold">
                   <span>Speed multiplier</span>
                   <span>{rotationSpeed.toFixed(1)}x</span>
                 </div>
@@ -590,34 +574,34 @@ export default function InteractiveCanvas3D({
                   step="0.2"
                   value={rotationSpeed}
                   onChange={(e) => setRotationSpeed(parseFloat(e.target.value))}
-                  className="w-full h-1 bg-ocean-950 rounded-lg appearance-none cursor-pointer accent-ocean-400"
+                  className="w-full h-1 bg-zinc-900 rounded-lg appearance-none cursor-pointer accent-white"
                 />
               </div>
             )}
           </div>
 
-          <div className="flex items-center justify-between border-t border-ocean-800/60 pt-3">
-            <span className="text-xs text-slate-300 font-bold">Floor Reference Grid</span>
+          <div className="flex items-center justify-between border-t border-zinc-800 pt-3">
+            <span className="text-xs text-zinc-300 font-bold">Floor Reference Grid</span>
             <button
               id="btn-toggle-grid"
               onClick={() => setShowGrid(!showGrid)}
               className={`w-10 h-5 rounded-full p-0.5 transition-colors duration-200 outline-none cursor-pointer ${
-                showGrid ? "bg-ocean-550" : "bg-ocean-950 border border-ocean-800/80"
+                showGrid ? "bg-white" : "bg-zinc-900 border border-zinc-800"
               }`}
             >
-              <div className={`w-4 h-4 bg-white rounded-full shadow-md transform duration-200 ease-out ${
-                showGrid ? "translate-x-5" : "translate-x-0"
+              <div className={`w-4 h-4 rounded-full shadow-md transform duration-200 ease-out ${
+                showGrid ? "translate-x-5 bg-black" : "translate-x-0 bg-white"
               }`} />
             </button>
           </div>
         </div>
 
-        <div className="bg-ocean-950/45 border border-ocean-800/60 rounded-2xl p-3.5 space-y-1.5">
-          <div className="flex items-center gap-1.5 text-xs font-bold text-ocean-300 select-none tracking-widest uppercase">
-            <Compass className="w-3.5 h-3.5 text-ocean-400 animate-spin" style={{ animationDuration: "12s" }} />
+        <div className="bg-zinc-900/60 border border-zinc-800 rounded-2xl p-3.5 space-y-1.5">
+          <div className="flex items-center gap-1.5 text-xs font-bold text-white select-none tracking-widest uppercase">
+            <Compass className="w-3.5 h-3.5 text-white animate-spin" style={{ animationDuration: "12s" }} />
             RAFFI ARYA INTERACTION
           </div>
-          <p className="text-[10px] text-slate-350 leading-relaxed font-sans font-medium">
+          <p className="text-[10px] text-zinc-400 leading-relaxed font-sans font-medium">
             "WebGL 3D Viewport ini menggunakan Three.js untuk merender objek model 3D kustom Anda secara real-time."
           </p>
         </div>

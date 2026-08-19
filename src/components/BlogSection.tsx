@@ -115,7 +115,7 @@ export default function BlogSection() {
             <span className="h-1.5 w-10 bg-ocean-400 rounded-full" />
             <span className="font-mono text-xs text-ocean-300 uppercase tracking-widest font-bold">Dokumentasi Karya</span>
           </div>
-          <h2 className="text-3xl font-bold tracking-tight text-white sm:text-4xl">
+          <h2 className="text-3xl font-bold tracking-tight text-slate-50 sm:text-4xl">
             BLOG & CATATAN KREATIF
           </h2>
           <p className="mt-3 text-slate-350 max-w-xl text-sm leading-relaxed font-medium">
@@ -133,7 +133,7 @@ export default function BlogSection() {
               document.getElementById("post-form-anchor")?.scrollIntoView({ behavior: "smooth", block: "center" });
             }, 100);
           }}
-          className="flex items-center gap-2 bg-gradient-to-r from-ocean-600 to-ocean-400 hover:brightness-110 text-white text-xs font-bold px-5 py-3 rounded-xl transition-all duration-300 shadow-xl shadow-ocean-500/15 cursor-pointer self-start tracking-wider"
+          className="flex items-center gap-2 bg-gradient-to-r from-ocean-600 to-ocean-400 hover:brightness-110 text-slate-50 text-xs font-bold px-5 py-3 rounded-xl transition-all duration-300 shadow-xl shadow-ocean-500/15 cursor-pointer self-start tracking-wider"
         >
           <PlusCircle className="w-4 h-4" />
           <span>{showForm ? "TETUP FORM CATATAN" : "TULIS CATATAN BARU"}</span>
@@ -185,10 +185,10 @@ export default function BlogSection() {
                         onChange={(e) => setFormCategory(e.target.value as any)}
                         className="w-full bg-ocean-950/60 border border-ocean-800/85 rounded-xl p-3 text-slate-200 text-sm focus:outline-none focus:border-ocean-500 transition-colors cursor-pointer font-medium"
                       >
-                        <option value="Tutorial" className="bg-[#0b0b0f] text-white">Tutorial</option>
-                        <option value="Personal" className="bg-[#0b0b0f] text-white">Personal / Diary</option>
-                        <option value="Opinion" className="bg-[#0b0b0f] text-white">Opini / Analisis</option>
-                        <option value="Creative" className="bg-[#0b0b0f] text-white">Karya Kreatif</option>
+                        <option value="Tutorial" className="bg-[#0b0b0f] text-slate-50">Tutorial</option>
+                        <option value="Personal" className="bg-[#0b0b0f] text-slate-50">Personal / Diary</option>
+                        <option value="Opinion" className="bg-[#0b0b0f] text-slate-50">Opini / Analisis</option>
+                        <option value="Creative" className="bg-[#0b0b0f] text-slate-50">Karya Kreatif</option>
                       </select>
                     </div>
                   </div>
@@ -224,14 +224,14 @@ export default function BlogSection() {
                       id="btn-blog-cancel"
                       type="button"
                       onClick={() => setShowForm(false)}
-                      className="px-4 py-2 text-xs font-semibold text-slate-400 hover:text-white transition-colors cursor-pointer"
+                      className="px-4 py-2 text-xs font-semibold text-slate-400 hover:text-slate-50 transition-colors cursor-pointer"
                     >
                       Batal
                     </button>
                     <button
                       id="btn-blog-submit"
                       type="submit"
-                      className="bg-gradient-to-r from-ocean-600 to-ocean-400 hover:brightness-110 text-white text-xs font-bold px-6 py-2.5 rounded-xl transition-all cursor-pointer shadow-lg shadow-ocean-500/15 tracking-wide uppercase font-sans"
+                      className="bg-gradient-to-r from-ocean-600 to-ocean-400 hover:brightness-110 text-slate-50 text-xs font-bold px-6 py-2.5 rounded-xl transition-all cursor-pointer shadow-lg shadow-ocean-500/15 tracking-wide uppercase font-sans"
                     >
                       Terbitkan Sekarang
                     </button>
@@ -256,7 +256,7 @@ export default function BlogSection() {
               className={`px-3.5 py-1.5 rounded-xl text-xs font-semibold cursor-pointer transition-all ${
                 selectedCategory === cat
                   ? "bg-ocean-500/20 text-ocean-300 border border-ocean-500/40"
-                  : "bg-ocean-950/40 text-slate-400 border border-ocean-800/60 hover:bg-ocean-800/30 hover:text-white"
+                  : "bg-ocean-950/40 text-slate-400 border border-ocean-800/60 hover:bg-ocean-800/30 hover:text-slate-50"
               }`}
             >
               #{cat}
@@ -279,7 +279,7 @@ export default function BlogSection() {
             <button
               id="blog-search-clear"
               onClick={() => setSearchQuery("")}
-              className="absolute right-3 top-2.5 text-[10px] text-slate-500 hover:text-white cursor-pointer"
+              className="absolute right-3 top-2.5 text-[10px] text-slate-500 hover:text-slate-50 cursor-pointer"
             >
               Clear
             </button>
@@ -383,7 +383,7 @@ export default function BlogSection() {
                 </span>
               </div>
 
-              <h1 className="text-xl md:text-3xl font-extrabold text-white tracking-tight mt-1 mb-6 leading-tight">
+              <h1 className="text-xl md:text-3xl font-extrabold text-slate-50 tracking-tight mt-1 mb-6 leading-tight">
                 {activePost.title}
               </h1>
 
@@ -408,7 +408,7 @@ export default function BlogSection() {
                 <button
                   id="btn-blog-modal-close"
                   onClick={() => setActivePost(null)}
-                  className="bg-ocean-950 hover:bg-ocean-800 border border-ocean-800/80 text-slate-350 hover:text-white px-5 py-2.5 rounded-xl text-xs font-semibold cursor-pointer transition-colors"
+                  className="bg-ocean-950 hover:bg-ocean-800 border border-ocean-800/80 text-slate-350 hover:text-slate-50 px-5 py-2.5 rounded-xl text-xs font-semibold cursor-pointer transition-colors"
                 >
                   Selesai Membaca
                 </button>
