@@ -3,94 +3,102 @@ import { Canvas, useFrame } from "@react-three/fiber";
 import * as THREE from "three";
 
 function FloatingPoints() {
-  const pointsRef = useRef<THREE.Points>(null);
-  const linesRef = useRef<THREE.LineSegments>(null);
-  const count = 320;
+  const networkRef = useRef<THREE.Group>(null);
+  const orbitRef = useRef<THREE.Group>(null);
+  const count = 540;
 
-  // Generate 3D coordinates for points and constellation lines
-  const [positions, linePositions] = useMemo(() => {
+  // Stable procedural star map: foreground, mid-field, and deep-field points.
+  const [positions, linePositions, beaconPositions] = useMemo(() => {
     const pos = new Float32Array(count * 3);
     for (let i = 0; i < count; i++) {
-      pos[i * 3] = (Math.random() - 0.5) * 12;     // X
-      pos[i * 3 + 1] = (Math.random() - 0.5) * 12; // Y
-      pos[i * 3 + 2] = (Math.random() - 0.5) * 8;  // Z
+      const layer = i % 3;
+      const spread = layer === 0 ? 11 : layer === 1 ? 15 : 20;
+      pos[i * 3] = (Math.random() - 0.5) * spread;
+      pos[i * 3 + 1] = (Math.random() - 0.5) * spread * 0.7;
+      pos[i * 3 + 2] = -2.5 + Math.random() * 9;
     }
 
-    // Connect close points with subtle 3D lines
-    const lineCoords: number[] = [];
+    // Use local neighbor searches to keep the constellation structure detailed but performant.
+    const lines: number[] = [];
     for (let i = 0; i < count; i++) {
-      for (let j = i + 1; j < count; j++) {
+      let connections = 0;
+      for (let j = i + 1; j < count && connections < 3; j++) {
         const dx = pos[i * 3] - pos[j * 3];
         const dy = pos[i * 3 + 1] - pos[j * 3 + 1];
         const dz = pos[i * 3 + 2] - pos[j * 3 + 2];
-        const dist = Math.sqrt(dx * dx + dy * dy + dz * dz);
-        if (dist < 1.6) {
-          lineCoords.push(pos[i * 3], pos[i * 3 + 1], pos[i * 3 + 2]);
-          lineCoords.push(pos[j * 3], pos[j * 3 + 1], pos[j * 3 + 2]);
+        if (dx * dx + dy * dy + dz * dz < 3.6) {
+          lines.push(pos[i * 3], pos[i * 3 + 1], pos[i * 3 + 2]);
+          lines.push(pos[j * 3], pos[j * 3 + 1], pos[j * 3 + 2]);
+          connections++;
         }
       }
     }
 
-    return [pos, new Float32Array(lineCoords)];
+    const beacons = new Float32Array([
+      -4.5, 2.2, 0.4, 4.8, 1.6, 0.8, -3.2, -2.7, 1.3,
+      3.8, -2.4, -0.4, 0.2, 3.5, 0.2, 0.5, -3.7, 0.5
+    ]);
+    return [pos, new Float32Array(lines), beacons];
   }, []);
 
   useFrame((state, delta) => {
-    const targetX = state.pointer.y * 0.12;
-    const targetY = state.pointer.x * 0.12;
-
-    if (pointsRef.current) {
-      pointsRef.current.rotation.y += delta * 0.015 + (targetY - pointsRef.current.rotation.y) * 0.04;
-      pointsRef.current.rotation.x += delta * 0.008 + (targetX - pointsRef.current.rotation.x) * 0.04;
-
-      const posAttr = pointsRef.current.geometry.attributes.position;
-      const array = posAttr.array as Float32Array;
-      const time = state.clock.elapsedTime;
-
-      for (let i = 0; i < count; i++) {
-        array[i * 3 + 1] += Math.sin(time * 0.2 + i) * 0.0005;
-      }
-      posAttr.needsUpdate = true;
+    const pointerX = state.pointer.x * 0.16;
+    const pointerY = state.pointer.y * 0.12;
+    if (networkRef.current) {
+      networkRef.current.rotation.y += delta * 0.018;
+      networkRef.current.rotation.x += (pointerY - networkRef.current.rotation.x) * 0.015;
+      networkRef.current.rotation.y += (pointerX - networkRef.current.rotation.y) * 0.006;
     }
-
-    if (linesRef.current && pointsRef.current) {
-      linesRef.current.rotation.x = pointsRef.current.rotation.x;
-      linesRef.current.rotation.y = pointsRef.current.rotation.y;
+    if (orbitRef.current) {
+      orbitRef.current.rotation.z -= delta * 0.05;
+      orbitRef.current.rotation.x = Math.sin(state.clock.elapsedTime * 0.12) * 0.16;
     }
   });
 
   return (
     <group>
-      <points ref={pointsRef}>
-        <bufferGeometry>
-          <bufferAttribute
-            attach="attributes-position"
-            args={[positions, 3]}
-          />
-        </bufferGeometry>
-        <pointsMaterial
-          color="#ffffff"
-          size={0.035}
-          sizeAttenuation
-          transparent
-          opacity={0.65}
-          depthWrite={false}
-        />
-      </points>
+      <group ref={networkRef}>
+        <points>
+          <bufferGeometry>
+            <bufferAttribute attach="attributes-position" args={[positions, 3]} />
+          </bufferGeometry>
+          <pointsMaterial color="#ffffff" size={0.055} sizeAttenuation transparent opacity={0.92} depthWrite={false} />
+        </points>
 
-      <lineSegments ref={linesRef}>
-        <bufferGeometry>
-          <bufferAttribute
-            attach="attributes-position"
-            args={[linePositions, 3]}
-          />
-        </bufferGeometry>
-        <lineBasicMaterial
-          color="#ffffff"
-          transparent
-          opacity={0.07}
-          depthWrite={false}
-        />
-      </lineSegments>
+        <lineSegments>
+          <bufferGeometry>
+            <bufferAttribute attach="attributes-position" args={[linePositions, 3]} />
+          </bufferGeometry>
+          <lineBasicMaterial color="#ffffff" transparent opacity={0.18} depthWrite={false} />
+        </lineSegments>
+
+        {Array.from({ length: 18 }).map((_, index) => {
+          const x = beaconPositions[index * 3];
+          const y = beaconPositions[index * 3 + 1];
+          const z = beaconPositions[index * 3 + 2];
+          return (
+            <mesh key={index} position={[x, y, z]} rotation={[index, index * 0.6, 0]}>
+              <octahedronGeometry args={[index % 3 === 0 ? 0.12 : 0.06, 0]} />
+              <meshBasicMaterial color="#ffffff" transparent opacity={index % 3 === 0 ? 0.9 : 0.5} wireframe={index % 2 === 0} />
+            </mesh>
+          );
+        })}
+      </group>
+
+      <group ref={orbitRef} position={[0, 0, -1]}>
+        <mesh rotation={[Math.PI / 2.7, 0.25, 0]}>
+          <torusGeometry args={[5.8, 0.012, 5, 160]} />
+          <meshBasicMaterial color="#ffffff" transparent opacity={0.28} />
+        </mesh>
+        <mesh rotation={[Math.PI / 1.85, -0.45, 0.4]}>
+          <torusGeometry args={[4.1, 0.009, 4, 120]} />
+          <meshBasicMaterial color="#ffffff" transparent opacity={0.2} />
+        </mesh>
+        <mesh rotation={[0.75, 0.4, -0.3]}>
+          <icosahedronGeometry args={[2.1, 2]} />
+          <meshBasicMaterial color="#ffffff" transparent opacity={0.08} wireframe />
+        </mesh>
+      </group>
     </group>
   );
 }
